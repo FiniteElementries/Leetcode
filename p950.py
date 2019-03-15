@@ -1,3 +1,6 @@
+"""
+https://leetcode.com/problems/reveal-cards-in-increasing-order/submissions/
+"""
 class Solution(object):
     def deckRevealedIncreasing(self, deck):
         """

@@ -1,4 +1,5 @@
-# not done
+# todo not done
+import heapq
 
 class Solution(object):
     def kthSmallest(self, matrix, k):
@@ -11,43 +12,14 @@ class Solution(object):
         heap_list = []
         n = len(matrix)
         for i in range(0, len(matrix)):
-            heap_list.append(Heap(0, i, matrix[0][i]))
+            for j in range(0, len(matrix[0])):
+                heapq.heappush(heap_list, matrix[i][j])
 
         for i in range(0, k):
-            # print_heap_list(i, heap_list)
-            min_heap, ind = find_min_heap(heap_list)
+            val = heapq.heappop(heap_list)
 
-            if(min_heap.row + 1 < n):
-                heap_list[ind] = Heap(min_heap.row + 1, min_heap.column, matrix[min_heap.row + 1][min_heap.column])
-            else:
-                del heap_list[ind]
+        return val
 
-        return min_heap.value
-
-def find_min_heap(heap_list):
-    min_heap = heap_list[0]
-    ind = 0
-
-    for i in range(0, len(heap_list)):
-
-        if(min_heap.value > heap_list[i].value):
-
-            min_heap = heap_list[i]
-            ind = i
-
-    return min_heap, ind
-
-
-class Heap():
-    def __init__(self, row, column, value):
-        self.row = row
-        self.column = column
-        self.value = value
-
-
-def print_heap_list(i, heap_list):
-
-    print(i, [x.value for x in heap_list])
 
 
 
