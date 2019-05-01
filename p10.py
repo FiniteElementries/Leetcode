@@ -1,18 +1,15 @@
 class Solution:
 
-    transition_state = []
-
-
     def dfs(self, pattern, position):
         if position >= len(pattern):
-            return [-1]
-        ret_state = [position]
+            return set([-1])
+        ret_state = set([position])
         if pattern[position] == '*':
-            ret_state.append(position - 1)
-            ret_state.extend(self.dfs(pattern, position + 1))
+            ret_state.add(position - 1)
+            ret_state = ret_state.union(self.dfs(pattern, position + 1))
         if position<len(pattern)-1:
             if pattern[position+1] == '*':
-                ret_state.extend(self.dfs(pattern, position + 1))
+                ret_state = ret_state.union(self.dfs(pattern, position + 1))
         return ret_state
 
     def isMatch(self, s, p):
@@ -23,24 +20,17 @@ class Solution:
             else:
                 return False
 
-        # for i in range(len(p)):
-        #     if p[i] != "*":
-        #         self.transition_state[i] = [i+1]
-        #     else:
-        #         self.transition_state[i] = [i-1, i+1]
-
-
         # look through text to update state
         current_states = self.dfs(p, 0)
         for i in range(len(s)):
-            next_states = []
+            next_states = set([])
             for state in current_states:
                 if state == -1:
                     continue
                 state_char = p[state]
                 # if match populate next possible states
                 if s[i] == state_char or state_char == ".":
-                    next_states.extend(self.dfs(p, state + 1))
+                    next_states = next_states.union(self.dfs(p, state + 1))
 
             current_states = next_states
 
