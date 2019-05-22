@@ -5,7 +5,7 @@ import heapq
 class HeightHeap(object):
 
     def __init__(self, height, ind):
-        self.height = 1.0/(height+0.001)
+        self.height = -height
         self.ind = ind
 
     def __lt__(self, other):
