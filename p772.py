@@ -20,7 +20,7 @@ class Solution(object):
         '(': -1
     }
 
-    def convert_to_prefix(self, s):
+    def convert_to_postfix(self, s):
 
         stack = []
         prefixFormat = []
@@ -61,7 +61,7 @@ class Solution(object):
 
     def calculate(self, s):
         s = s.replace(" ", '')
-        prefix = self.convert_to_prefix(s)
+        prefix = self.convert_to_postfix(s)
 
         stack = []
         for item in prefix:
