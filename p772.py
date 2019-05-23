@@ -45,10 +45,10 @@ class Solution(object):
                             del stack[-1]
                         del stack[-1]
                     else:
-                        if self.order[stack[-1]]<self.order[s[i]]:
+                        if self.order[stack[-1]] < self.order[s[i]]:
                             stack.append((s[i]))
                         else:
-                            while len(stack)>0 and self.order[stack[-1]] > self.order[s[i]]:
+                            while len(stack) > 0 and self.order[stack[-1]] >= self.order[s[i]]:
                                 prefixFormat.append(stack[-1])
                                 del stack[-1]
                             stack.append(s[i])
@@ -59,7 +59,7 @@ class Solution(object):
             del stack[-1]
         return prefixFormat
 
-    def calculate(self, s):
+    def calculate(self, s: str) -> int:
         s = s.replace(" ", '')
         prefix = self.convert_to_postfix(s)
 
@@ -77,7 +77,7 @@ class Solution(object):
                 elif item == '-':
                     c = b-a
                 elif item == '/':
-                    c = b/a
+                    c = int(b/a)
                 else:
                     c = a*b
                 stack.append(c)
@@ -89,8 +89,9 @@ class Solution(object):
 if __name__=="__main__":
     s = Solution()
 
-    st = "1 + 1"
-    st = " 6-4 / 2 "
-    st = "2*(5+5*2)/3+(6/2+8)"
-    st = "(2+6* 3+5- (3*14/7+2)*5)+3"
+    # st = "1 + 1"
+    # st = " 6-4 / 2 "
+    # st = "2*(5+5*2)/3+(6/2+8)"
+    # st = "(2+6* 3+5- (3*14/7+2)*5)+3"
+    st = " 2-1 + 2 "
     print(s.calculate(st))
