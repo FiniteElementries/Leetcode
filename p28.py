@@ -1,29 +1,26 @@
-
-
 class Solution:
+
+    def find_potential_state(self, needle, i):
+        return {0, i}
+
     def strStr(self, haystack: str, needle: str) -> int:
-        if needle=='':
+        if needle == '':
             return 0
 
-        state_machine = []
-
-        for i in range(0, len(needle)):
-            state_machine.append([0, i+1])
-
-        possible_states = set([0])
+        possible_states = self.find_potential_state(needle, 0)
         for i in range(0, len(haystack)):
-            current_states = []
+            current_states = set([])
             for item in possible_states:
                 if haystack[i] == needle[item]:
-                    current_states.append(item)
+                    current_states.add(item)
 
             possible_states = set([0])
 
             for item in current_states:
-                for pi in state_machine[item]:
-                    if pi >= len(needle):
-                        return i-len(needle)+1
-                    possible_states.add(pi)
+                possible_states = possible_states.union(self.find_potential_state(needle, item+1))
+
+                if item == len(needle)-1:
+                    return i - len(needle) + 1
 
         return -1
 
