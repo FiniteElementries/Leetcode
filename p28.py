@@ -1,24 +1,36 @@
 class Solution:
 
 
-    def build_dfa(self, needle):
+    def build_dfa(self, pattern):
+        """ build deterministic finite automata """
 
-        map = {}
-
+        # create state table with default future state 0
+        dfa = {}
         chs = [chr(x) for x in range(ord('a'), ord('z')+1)]
-
         for c in chs:
-            map[c] = [0] * len(needle)
+            dfa[c] = [0] * len(pattern)
 
+        # use x to track fallback state if there is mismatch
         x = 0
-        map[needle[0]][0] = 1
-        for i in range(1, len(needle)):
-            for c in chs:
-                map[c][i] = map[c][x]
 
-            map[needle[i]][i] = i+1
-            x = map[needle[i]][x]
-        return map
+        # start state is 1 at beginning of pattern
+        dfa[pattern[0]][0] = 1
+
+        # building from state at 1 and fallback at 0
+        # as fallback state at state 0 is always 0
+        for i in range(1, len(pattern)):
+            # set fallback state at state's character
+            # to corresponding state's character at x
+            for c in chs:
+                dfa[c][i] = dfa[c][x]
+
+            # set forward state if there is match
+            dfa[pattern[i]][i] = i + 1
+
+            # move x state forward
+            x = dfa[pattern[i]][x]
+
+        return dfa
 
     def strStr(self, haystack: str, needle: str) -> int:
         if needle == '':
@@ -28,7 +40,11 @@ class Solution:
 
         j = 0
         for i in range(0, len(haystack)):
+
+            # grab state based on current character and state
             j = dfa[haystack[i]][j]
+
+            # if reach end of state
             if j == len(needle):
                 return i-j+1
 
