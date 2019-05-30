@@ -41,11 +41,8 @@ class Solution:
         else:
             right = len(heights) - 1
 
-        # self.mem[i] = [left, right]
-
         self.mem[left] = [left, right]
         self.mem[right] = [left, right]
-            # self.marker[j] = 1
 
         area = (right - left + 1) * heights[i]
         if area > self.max_height:
