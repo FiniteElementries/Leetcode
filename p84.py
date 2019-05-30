@@ -2,6 +2,16 @@ import heapq
 from typing import List
 
 
+class HeapItem(object):
+
+    def __init__(self, i, value):
+        self.i = i
+        self.value = value
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+
 class Solution:
 
     def search_left(self, i, number, heights):
@@ -11,7 +21,7 @@ class Solution:
             if i < 0:
                 break
             self.marker[i] = 1
-        if i>=0:
+        if i >= 0:
             self.marker[i] = 0
         return i + 1
 
@@ -54,23 +64,17 @@ class Solution:
 
         heap = []
         self.mem = []
-        self.map = {}
         self.marker = [0] * len(heights)
         self.max_height = heights[0]
         for i in range(0, len(heights)):
             item = heights[i]
-            heap_val = -item
-            if heap_val not in self.map:
-                self.map[heap_val] = []
-            self.map[heap_val].append(i)
-
-            heapq.heappush(heap, -item)
+            heap_item = HeapItem(i, -item)
+            heapq.heappush(heap, heap_item)
             self.mem.append([i, i])
 
         while len(heap) > 0:
             item = heapq.heappop(heap)
-            i = self.map[item][-1]
-            del self.map[item][-1]
+            i = item.i
             self.search(i, heights)
 
         return self.max_height
