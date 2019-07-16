@@ -7,11 +7,9 @@ class Solution(object):
 
         count = 0
         f = n // 5
-        n = f
         while f > 0:
             count += f
-            f = n // 5
-            n = f
+            f = f // 5
         return count
 
 
