@@ -8,14 +8,7 @@ class MyStr(object):
 
     def __lt__(self, other):
         for i in range(0, max(len(self.val), len(other.val))):
-            if i > len(self.val) - 1 or i > len(other.val) - 1:
-                return self.val + other.val < other.val + self.val
-
-            self_val = self.val[i]
-            other_val = other.val[i]
-            if self_val != other_val:
-                return self_val < other_val
-
+            return self.val + other.val < other.val + self.val
 
 class Solution(object):
 
