@@ -7,14 +7,13 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        tmp = nums[:] + nums[:]
         k = k % len(nums)
+        tmp = nums[-k::]
 
-        start = len(nums)-k
-        end = len(nums) + start
-        tmp = tmp[start:end]
+        for i in range(len(nums) - 1, k - 1, -1):
+            nums[i] = nums[i - k]
 
-        for i in range(len(nums)):
+        for i in range(0, k):
             nums[i] = tmp[i]
 
 
