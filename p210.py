@@ -4,52 +4,37 @@ class Solution:
 
     solution = []
 
-    def dfs(self, node, edges, pre_request_count):
-        if pre_request_count[node] < 0:
-            return
+    def dfs(self, node, edges, visited):
+        if visited[node] == 2:
+            return True
+        if visited[node] == 1:
+            return False
 
-        pre_request_count[node] -= 1
-        # check pre requests
-        if pre_request_count[node] > 0:
-            return
-
-        self.solution.append(node)
+        visited[node] = 1
         if node in edges:
-            for next_node in edges[node]:
-                self.dfs(next_node, edges, pre_request_count)
+            for item in edges[node]:
+                if not self.dfs(item, edges, visited):
+                    return False
+        visited[node] = 2
+        self.solution.append(node)
+        return True
 
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
 
-
         self.solution = []
-
         edges = {}
-
-        pre_request_count = [0] * numCourses
-
-        end_nodes = set()
-
-        # create graph
         for edge in prerequisites:
             start = edge[1]
             end = edge[0]
-            pre_request_count[end] += 1
-
-            end_nodes.add(end)
-
             if start not in edges:
-                edges[start] = set()
+                edges[start] = []
+            edges[start].append(end)
 
-            edges[start].add(end)
-
-        for item in range(numCourses):
-            if item not in end_nodes:
-                self.dfs(item, edges, pre_request_count)
-
-        for item in pre_request_count:
-            if item > 0:
+        visited = [0] * numCourses
+        for item in range(0, numCourses):
+            if not self.dfs(item, edges, visited):
                 return []
-        return self.solution
+        return self.solution[::-1]
 
 if __name__ == '__main__':
     s = Solution()
