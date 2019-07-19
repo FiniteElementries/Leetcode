@@ -1,7 +1,8 @@
 from typing import List
 
-
 class Solution:
+
+    solution = []
 
     def dfs(self, node, edges, pre_request_count):
         if pre_request_count[node] < 0:
@@ -12,16 +13,20 @@ class Solution:
         if pre_request_count[node] > 0:
             return
 
+        self.solution.append(node)
         if node in edges:
             for next_node in edges[node]:
                 self.dfs(next_node, edges, pre_request_count)
 
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        if not prerequisites:
-            return True
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+
+
+        self.solution = []
 
         edges = {}
+
         pre_request_count = [0] * numCourses
+
         end_nodes = set()
 
         # create graph
@@ -43,9 +48,8 @@ class Solution:
 
         for item in pre_request_count:
             if item > 0:
-                return False
-        return True
-
+                return []
+        return self.solution
 
 if __name__ == '__main__':
     s = Solution()
@@ -62,4 +66,4 @@ if __name__ == '__main__':
     # numCourses = 3
     # prerequisites = [[1,0],[1,2],[0,1]]
 
-    print(s.canFinish(numCourses, prerequisites))
+    print(s.findOrder(numCourses, prerequisites))
