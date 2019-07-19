@@ -7,10 +7,12 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        tmp = nums[:] + nums[:]
 
-        for i in range(len(nums)):
-            nums[i] = tmp[i + len(nums) - k]
+        starter = nums[0+k]
+        for i in range(0, k):
+            val = nums[i+k]
+            nums[i+k] = nums[i]
+
 
 
 if __name__ == "__main__":
