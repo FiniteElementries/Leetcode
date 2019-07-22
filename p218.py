@@ -1,71 +1,75 @@
-import heapq
 from typing import List
 
 
-class Building(object):
+class HeightEvent(object):
 
-    def __init__(self, l, r, h):
+    def __init__(self, l, h):
         self.l = l
-        self.r = r
         self.h = h
 
     def __lt__(self, other):
-        return self.h > other.h
+        return self.h < other.h
+
+    def __eq__(self, other):
+        return self.h == other.h
+
+    def __repr__(self):
+        return str([self.l, self.h])
 
 
 class Solution:
+
+    def consolidate_stack(self, stack, item):
+        if stack[-1][0] == item[0]:
+            stack.pop()
+
+        if stack[-1][1] != item[1]:
+            stack.append(item)
+
+
+
     def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
 
-        # create heap by height, highest is at top of heap
-        max_r = 0
-        bs = []
-        for b in buildings:
-            if b[1] > max_r:
-                max_r = b[1]
-            bs.append(Building(b[0], b[1], b[2]))
-        bs.append(Building(-1, max_r + 1, 0))
-        heapq.heapify(bs)
+        events = []
 
-        # pop heap one by one to create contour
-        countour_buildings = []
-        while bs:
-            new_bs = [heapq.heappop(bs)]
+        for item in buildings:
+            events.append([item[0], item[2]])
+            events.append([item[1], item[2]])
 
-            for c_building in countour_buildings:
-                l = len(new_bs)
+        events = sorted(events, key=lambda x: x[0])
 
-                # check new height overlapping with existing contour
-                # and break new height down into fragments where non overlapping
-                for i in range(l):
-                    new_b = new_bs[i]
-                    if new_b:
-                        if c_building.l <= new_b.l < new_b.r <= c_building.r:
-                            new_bs[i] = None
-                            break
-                        elif c_building.l <= new_b.l < c_building.r <= new_b.r:
-                            new_b.l = c_building.r
-                        elif new_b.l <= c_building.l < new_b.r <= c_building.r:
-                            new_b.r = c_building.l
-                        elif new_b.l < c_building.l < c_building.r < new_b.r:
-                            new_bs.append(Building(c_building.r, new_b.r, new_b.h))
-                            new_b.r = c_building.l
+        height_stack = [HeightEvent(0, 0)]
+        records = []
 
-            for item in new_bs:
-                if item:
-                    countour_buildings.append(item)
+        for i in range(len(events)):
+            item = events[i]
+            new_event = HeightEvent(item[0], item[1])
+            if new_event > height_stack[-1]:
+                height_stack.append(HeightEvent(item[0], item[1]))
+                records.append([item[0], item[1]])
+            elif new_event < height_stack[-1]:
+                for i in range(len(height_stack)):
+                    if height_stack[i] == new_event:
+                        height_stack.remove(height_stack[i])
+                        break
+                    if height_stack[i] > new_event:
+                        height_stack = height_stack[:i] + [new_event] + height_stack[i:]
+                        break
+            elif new_event == height_stack[-1]:
+                height_stack.pop()
+                records.append([new_event.l, height_stack[-1].h])
 
-        # get points
-        t = [[x.l, x.h] for x in countour_buildings]
 
-        contours = sorted(t, key=lambda x: x[0])[1:]
-        cleaned = []
-        for item in contours:  # clean same height
-            if cleaned:
-                if cleaned[-1][1] == item[1]:
-                    continue
-            cleaned.append(item)
+        stack = []
+        for item in records:
+            if not stack:
+                stack.append(item)
+            else:
+                self.consolidate_stack(stack, item)
 
-        return cleaned
+        return stack
+
+
 
 
 if __name__ == '__main__':
@@ -75,8 +79,10 @@ if __name__ == '__main__':
 
     # buildings = [[0, 2147483647, 2147483647]]
 
-    buildings = [[0, 1, 3]]
+    # buildings = [[0, 1, 3]]
+    #
+    # buildings = [[0, 2, 3], [2, 5, 3]]
 
-    buildings = [[0, 2, 3], [2, 5, 3]]
+    buildings = [[2, 9, 10], [9, 12, 15]]
 
     print(s.getSkyline(buildings))
