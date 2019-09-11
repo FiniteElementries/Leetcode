@@ -18,8 +18,11 @@ class Solution:
 
         count += (count1 + count2)
 
+        # count i in left and j in right
+
         i = 0
         j = 0
+        # every thing lower or equal to upper
         while i < mid and j < len(right):
             while i < mid and right[j] - left[i] > upper:
                 i += 1
@@ -28,13 +31,14 @@ class Solution:
 
         i = 0
         j = 0
+        # everything lower than lower bound needs to be subtracted
         while i < mid and j < len(right):
             while i < mid and right[j] - left[i] >= lower:
                 i += 1
             count -= (len(left) - i)
             j += 1
 
-        # merge
+        # merge left and right
         i = 0
         j = 0
         k = 0
