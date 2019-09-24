@@ -5,15 +5,19 @@ class Solution:
 
     def connect(self, u, v, arr):
         if arr[u] == 0 and arr[v] == 0:
+            # new union group
             arr[u] = u
             arr[v] = u
         else:
 
+            # attach new item to group
             if arr[v] == 0:
                 arr[v] = u
             elif arr[u] == 0:
                 arr[u] = v
             else:
+
+                # connect ancestors
                 k = u
                 while k != arr[k]:
                     k = arr[k]
