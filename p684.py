@@ -15,14 +15,14 @@ class Solution:
                 arr[u] = v
             else:
                 k = u
-                while k!=arr[k]:
+                while k != arr[k]:
                     k = arr[k]
 
                 k2 = v
-                while k2!=arr[k2]:
+                while k2 != arr[k2]:
                     k2 = arr[k2]
 
-                if k==k2:
+                if k == k2:
                     return [u, v]
                 else:
                     arr[k2] = k
