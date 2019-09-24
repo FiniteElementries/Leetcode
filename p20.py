@@ -1,30 +1,34 @@
-
-
 class Solution:
-
-    mapping = { '(': ')',
-                '{': '}',
-                '[': ']'}
-
     def isValid(self, s: str) -> bool:
 
         stack = []
-        for c in s:
-            if c in ['(', '{', '[']:
-                stack.append(c)
-            else:
-                if len(stack)<=0:
-                    return False
-                if c == self.mapping[stack[-1]]:
-                    stack.pop(-1)
-                else:
-                    return False
-        if len(stack)>0:
-            return False
-        else:
-            return True
 
-if __name__=="__main__":
+        for item in s:
+            if len(stack) == 0:
+                stack.append(item)
+            else:
+                if item in {'{', '(', '['}:
+                    stack.append(item)
+                else:
+                    if item == '}':
+                        if stack[-1] != '{':
+                            return False
+                        else:
+                            stack.pop()
+                    elif item == ')':
+                        if stack[-1] != '(':
+                            return False
+                        else:
+                            stack.pop()
+                    elif item == ']':
+                        if stack[-1] != '[':
+                            return False
+                        else:
+                            stack.pop()
+        return len(stack) == 0
+
+
+if __name__ == "__main__":
     s = Solution()
 
     ss = "()[]{}"
