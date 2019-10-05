@@ -1,66 +1,41 @@
 import heapq
 
 
-class MedianFinder(object):
+class MedianFinder:
 
     def __init__(self):
         """
         initialize your data structure here.
         """
-        self.count = 0
-        self.max_heap = []
-        self.min_heap = []
+        self.l_heap = []
+        self.r_heap = []
 
-    def balance(self):
-        while len(self.max_heap) - len(self.min_heap) > 1:
-            # move from max to min
-            max_top = heapq.heappop(self.max_heap)
-            heapq.heappush(self.min_heap, -max_top)
+    def addNum(self, num: int) -> None:
 
-        while len(self.min_heap) - len(self.max_heap) > 1:
-            # move from min to max
-            min_top = heapq.heappop(self.min_heap)
-            heapq.heappush(self.max_heap, -min_top)
+        if len(self.r_heap) == 0:
+            heapq.heappush(self.r_heap, (num, num))
+            return
 
-    def peek_top(self, h):
-        min_top = heapq.heappop(h)
-        heapq.heappush(h, min_top)
-        return min_top
-
-    def addNum(self, num):
-        """
-        :type num: int
-        :rtype: None
-        """
-        if not self.min_heap:
-            heapq.heappush(self.min_heap, num)
+        if num < self.r_heap[0][1]:
+            heapq.heappush(self.l_heap, (-num, num))
         else:
-            min_top = self.peek_top(self.min_heap)
+            heapq.heappush(self.r_heap, (num, num))
 
-            if num < min_top:
-                heapq.heappush(self.max_heap, -num)
-            else:
-                heapq.heappush(self.min_heap, num)
-            self.balance()
+        # balance l and r
+        if len(self.l_heap) > len(self.r_heap):
+            item = heapq.heappop(self.l_heap)
+            heapq.heappush(self.r_heap, (item[1], item[1]))
+        elif len(self.l_heap) < len(self.r_heap):
+            item = heapq.heappop(self.r_heap)
+            heapq.heappush(self.l_heap, (-item[1], item[1]))
 
-    def findMedian(self):
-        """
-        :rtype: float
-        """
-        if not self.min_heap:
-            return self.max_heap[0]
-        if not self.max_heap:
-            return self.min_heap[0]
-
-        min_top = self.peek_top(self.min_heap)
-        max_top = self.peek_top(self.max_heap)
-
-        if len(self.min_heap) == len(self.max_heap):
-            return (min_top - max_top) / 2
-        elif len(self.min_heap) < len(self.max_heap):
-            return -max_top
+    def findMedian(self) -> float:
+        if len(self.r_heap) > len(self.l_heap):
+            return self.r_heap[0][1]
+        elif len(self.r_heap) < len(self.l_heap):
+            return self.l_heap[0][1]
         else:
-            return min_top
+            return (self.l_heap[0][1] + self.r_heap[0][1]) / 2
 
 
 if __name__ == '__main__':

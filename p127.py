@@ -29,6 +29,61 @@ class Solution:
         return 0
 
 
+from collections import defaultdict
+from queue import Queue
+from typing import List
+
+
+class Solution2:
+
+    def is_connected(self, word1, word2):
+        count = 0
+        for i in range(len(word1)):
+            if word1[i] != word2[i]:
+                count += 1
+                if count >= 2:
+                    return False
+        return True
+
+    def add_edge(self, word1, word2, dic):
+        dic[word1].add(word2)
+        dic[word2].add(word1)
+
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+
+        # create graph
+        graph = defaultdict(lambda: set())
+        for item in wordList:
+            if self.is_connected(beginWord, item):
+                self.add_edge(beginWord, item, graph)
+
+        for i in range(0, len(wordList)):
+            for j in range(i + 1, len(wordList)):
+                if self.is_connected(wordList[i], wordList[j]):
+                    self.add_edge(wordList[i], wordList[j], graph)
+
+        return self.search_path(beginWord, endWord, graph)
+
+    def search_path(self, beginWord, endWord, graph):
+        q = Queue()
+        visited = set()
+
+        q.put((beginWord, 1))
+        visited.add(beginWord)
+
+        while not q.empty():
+            word, step = q.get()
+
+            if word == endWord:
+                return step
+
+            for neighbor in graph[word]:
+                if neighbor not in visited:
+                    q.put((neighbor, step + 1))
+                    visited.add(neighbor)
+
+        return 0
+
 if __name__ == '__main__':
     s = Solution()
     beginWord = "hit"
