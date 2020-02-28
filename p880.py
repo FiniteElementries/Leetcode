@@ -18,8 +18,9 @@ class Solution:
                     return S[i]
             i += 1
 
-
-        # search backward
+        # search backward recursively, new K should be K - last str length
+        # consider last string has length 25 and K is 28, when last string is copied, we need to count 3 more
+        # characters after end of last string, which is also beginning of last string
         # check between previous_current_id and current_id
         return self.decodeAtIndex(S, K-previous_copy_location)
 
